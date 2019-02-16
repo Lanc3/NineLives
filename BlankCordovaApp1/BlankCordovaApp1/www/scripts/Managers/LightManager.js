@@ -1,0 +1,12 @@
+class LightManager
+{
+    constructor()
+    {
+        
+       
+    }
+    draw()
+    {
+    
+    }
+}

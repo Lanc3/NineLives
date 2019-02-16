@@ -1,0 +1,33 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: black;
+    
+}
+
+#game-app {
+    margin: 0 auto;
+    display: inline-block;
+    flex-direction: column;
+    justify-content: center;
+}
+.logo {
+    background: url(../images/cordova.png) no-repeat center top;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+}
+
+#myProgress {
+    width: 100%;
+    background-color: grey;
+    position:absolute;
+}
+
+#myBar {
+    width: 1%;
+    height: 30px;
+    background-color: orangered;
+}
