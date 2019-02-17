@@ -10,19 +10,21 @@ Renderer = new renderer();
 var assetMan;
 
 assetMan = new assetManager();
-assetMan.queueShaderDownload("frag", "Assets/Shaders/fragment.shader");
-assetMan.queueShaderDownload("vert", "Assets/Shaders/vertex.shader");
-assetMan.downloadAllShaders();
-Renderer.createWebGLProgram();
+assetMan.queueAssetForDownload("Shader", "Assets/Shaders/fragment.shader","frag");
+assetMan.queueAssetForDownload("Shader", "Assets/Shaders/vertex.shader","vert");
 
-assetMan.queueAssetForDownload("Texture2D", "Assets/image.jpg", "test");
-assetMan.queueAssetForDownload("Texture2D", "images/bg_jungle.png", "jungleBackground");
-assetMan.queueAssetForDownload("Texture2D", "images/loadscreen.png", "loadingBackground");
-assetMan.queueAssetForDownload("Texture2D", "images/multiplayerButton.png", "multiplayerButton");
-assetMan.queueAssetForDownload("Texture2D", "images/optionsButton.png", "optionsButton");
-assetMan.queueAssetForDownload("Texture2D", "images/PlayButton.png", "PlayButton");
-assetMan.queueAssetForDownload("Texture2D", "images/QuitButton.png", "QuitButton");
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/bg_jungle.png", "jungleBackground");
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/platform.png", "platform");
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/sky.jpg", "skyBackground");
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/loadscreen.png", "loadingBackground");
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/multiplayerButton.png", "multiplayerButton");
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/optionsButton.png", "optionsButton");
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/PlayButton.png", "PlayButton");
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/QuitButton.png", "QuitButton");
+assetMan.queueAssetForDownload("Audio", "Assets/Audio/Music.mp3", "music");
 assetMan.downloadAssets();
+
+Renderer.createWebGLProgram();
 
 /**
  * startPoint is the starting point of the application.

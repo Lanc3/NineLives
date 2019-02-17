@@ -12,15 +12,18 @@ class game
         elem.style.visibility = 'hidden';
         back.style.visibility = 'hidden';
         this.inputManager = new InputManager();
+        this.audioManager = new audioManager();
         this.TitleScene = new titleScene("Title Scene", this.inputManager);
         this.MenuScene = new menuScene("Menu Scene", this.inputManager);
         this.PlayingScene = new playingScene("Playing Scene", this.inputManager);
         this.GameOverScene = new gameOverScene("Game Over Scene", this.inputManager);
+        this.tutorialScene = new tutorialScene("Tutorial Scene", this.inputManager);
         this.SceneManager = new sceneManager();
         this.SceneManager.addScene(this.TitleScene);
         this.SceneManager.addScene(this.MenuScene);
         this.SceneManager.addScene(this.PlayingScene);
         this.SceneManager.addScene(this.GameOverScene);
+        this.SceneManager.addScene(this.tutorialScene);
         this.SceneManager.goToScene("Menu Scene");
         
        
@@ -50,7 +53,7 @@ class game
         {
             if (this.SceneManager.currentScene.menuState.playing)
             {
-                this.SceneManager.goToScene("Playing Scene");
+                this.SceneManager.goToScene("Tutorial Scene");
             }
             else if (this.SceneManager.currentScene.menuState.multiplayer)
             {
@@ -65,7 +68,6 @@ class game
                 this.SceneManager.goToScene("Game Over Scene");
             }
         }
-        //console.log(this.inputManager.getIntupInfo());
         //loop
         window.requestAnimationFrame(this.boundRecursiveUpdate);
     }

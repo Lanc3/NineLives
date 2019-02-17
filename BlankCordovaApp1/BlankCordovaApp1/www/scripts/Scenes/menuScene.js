@@ -22,6 +22,10 @@ class menuScene extends scene
         this.multiplayerButton = new menuButton("multiplayerButton", Renderer.physicalScreenWidth / 2 - this.buttonWidth / 2, this.yPosition * 2, this.buttonWidth, this.height);
         this.optionsButton = new menuButton("optionsButton", Renderer.physicalScreenWidth / 2 - this.buttonWidth / 2, this.yPosition * 3, this.buttonWidth, this.height);
         this.quitButton = new menuButton("QuitButton", Renderer.physicalScreenWidth / 2 - this.buttonWidth / 2, this.yPosition * 4, this.buttonWidth, this.height);
+        //audio
+        this.audioManager = new audioManager();
+        this.audioManager.playSound("music", false);
+        
     } 
     /**
     * This is the render loop for rendering the scene
@@ -69,6 +73,7 @@ class menuScene extends scene
     */
     stop()
     {
+        console.log(window.screen.orientation);
         super.stop();
     }
 }

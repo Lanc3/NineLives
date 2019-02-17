@@ -35,8 +35,8 @@ class WebGLHelper
     */
     createProgramFromScripts(gl, fragmentShaderPath, vertexShaderPath)
     {
-        this.vertexShaderSource = assetMan.getShader("vert").text;
-        this.fragmentShaderSource = assetMan.getShader("frag").text;
+        this.vertexShaderSource = assetMan.getAsset("vert").shader;
+        this.fragmentShaderSource = assetMan.getAsset("frag").shader;
         this.vertexShader = this.compileShader(gl , this.vertexShaderSource , gl.VERTEX_SHADER);
         this.fragmentShader = this.compileShader(gl , this.fragmentShaderSource , gl.FRAGMENT_SHADER);
         this.program = gl.createProgram();

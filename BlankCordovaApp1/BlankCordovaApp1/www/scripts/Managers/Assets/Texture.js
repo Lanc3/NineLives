@@ -1,11 +1,10 @@
 class Texture extends Asset
 {
-    constructor(type, path, texture, textureWidth,textureHeight)
+    constructor(type, path, name , texture, textureWidth ,textureHeight)
     {
-        super(type);
+        super(type,path,name);
         this.width = textureWidth;
         this.height = textureHeight;
-        this.sourcePath = path;
         this.texture = texture;
     }
 }

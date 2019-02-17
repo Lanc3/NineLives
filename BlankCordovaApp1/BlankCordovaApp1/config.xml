@@ -107,4 +107,6 @@
   <engine name="ios" spec="~4.2.0" />
   <engine name="windows" spec="~4.4.2" />
   <preference name="Fullscreen" value="True" />
+  <plugin name="cordova-plugin-screen-orientation" spec="~3.0.2-dev" src="https://github.com/apache/cordova-plugin-screen-orientation.git" />
+  <plugin name="es6-promise-plugin" spec="~4.2.2" />
 </widget>
