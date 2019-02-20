@@ -64,7 +64,9 @@ class InputManager
         * @type {number} 
         */
         this.swipeMaxTime = 200;
-
+        this.left = false;
+        this.right = false;
+        this.tap = false;
 
         this.setupTouchDevice(this);
     }
@@ -109,13 +111,36 @@ class InputManager
             {
                 self.ongoingTouches.push(self.copyTouch(touches[index]));
                 self.startTouchList.push(self.copyTouch(touches[index]));
-                var color = "#FF0000" //self.colorForTouch(touches[index]);
-                
+                if (self.startTouchList.length > 1)
+                {
+                    this.last = self.startTouchList[self.startTouchList.length - 1].timeStamp;
+                    this.secondLast = self.startTouchList[self.startTouchList.length - 2].timeStamp;
+                    this.timeBetween = this.last - this.secondLast;
+                    //console.log(self.startTouchList[self.startTouchList.length - 1].timeStamp, self.startTouchList[self.startTouchList.length - 2].timeStamp, this.timeBetween);
+                    if (this.timeBetween < 500)
+                    {
+                        self.tap = true;
+                    }
+                    else
+                    {
+                        self.tap = false;
+                    }
+                }
             }
-            //console.log("color : "+color + " touch "+touches[index]);
         }
         self.touchCanvasPosition.x  = touches[0].pageX;
-        self.touchCanvasPosition.y  = touches[0].pageY;
+        self.touchCanvasPosition.y = touches[0].pageY;
+        if (touches[0].pageX > Renderer.physicalScreenWidth / 2)
+        {
+            self.right = true;
+            self.left = false;
+        }
+        if (touches[0].pageX < Renderer.physicalScreenWidth / 2)
+        {
+            self.right = false;
+            self.left = true;
+        }
+
         self.touching = true;
     }
     /**
@@ -144,14 +169,16 @@ class InputManager
                     this.deltaX = touches[index].pageX - self.startTouchList[idx].pageX;
                     this.angle = Math.atan2(this.deltaY,this.deltaX);
                     
-                    //console.log("Swipe Detected. length : " + this.length+ " time : " + this.time)
+                    console.log("Swipe Detected. length : " + this.length+ " time : " + this.time)
                 }
                 
                 self.ongoingTouches.splice(idx, 1);  // remove it; we're done
-                self.startTouchList.splice(idx, 1);
+               // self.startTouchList.splice(idx, 1);
                 self.touchCanvasPosition.x = -10;
                 self.touchCanvasPosition.y = - 10;
                 self.isTouching = false;
+                self.right = false;
+                self.left = false;
             }
             else 
             {      
@@ -199,12 +226,22 @@ class InputManager
             if (idx >= 0) 
             {
                 
-                self.ongoingTouches.splice(idx, 1, self.copyTouch(touches[index]));  // swap in the new touch record
+                self.ongoingTouches.splice(idx, 1, self.copyTouch(touches[index]));
+                
+               // swap in the new touch record
                 //console.log(e.changedTouches);
             }
             else 
             {
                 console.log("can't figure out which touch to continue");
+            }
+            if (touches[0].pageX > Renderer.physicalScreenWidth / 2) {
+                self.right = true;
+                self.left = false;
+            }
+            if (touches[0].pageX < Renderer.physicalScreenWidth / 2) {
+                self.right = false;
+                self.left = true;
             }
         }
     }
@@ -215,7 +252,7 @@ class InputManager
     {
         this.inputInfo = {};
         this.vector = new vector(this.touchCanvasPosition.x, this.touchCanvasPosition.y);
-        this.inputInfo = { position: this.vector, isTouching: this.touching };
+        this.inputInfo = { position: this.vector, isTouching: this.touching, onGoingTouch: this.ongoingTouches };
         return this.inputInfo;
     }
     /**

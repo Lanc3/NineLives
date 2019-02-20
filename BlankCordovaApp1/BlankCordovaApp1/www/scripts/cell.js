@@ -4,7 +4,7 @@
         this.position = position;
         this.platformList = [];
         this.screenHalfWidth = Renderer.physicalScreenWidth / 2;
-        this.platformList.push(new platform(new vector(this.screenHalfWidth, this.position.y + 200), 80, 30));
+        this.platformList.push(new platform(new vector(this.screenHalfWidth, this.position.y + 200), 80, 30,"platform"));
         this.yPositionAdjust = 5;
     }
     draw()
@@ -16,11 +16,19 @@
             element.draw();
         });
     }
+    addPlatform(position, width, height,image)
+    {
+        this.platformList.push(new platform(position, width, height, image));
+    }
+    replacePlatforms()
+    {
+
+    }
     update(dt)
     {
         var that = this;
         this.platformList.forEach(function (element) {
-            element.position = new vector(that.screenHalfWidth, that.position.y + 200);
+            //element.setPosition();// = new vector(that.screenHalfWidth, that.position.y + 200);
         });
     }
     changeBackground(image)

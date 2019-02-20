@@ -1,86 +1,74 @@
-class animation
+class Animation
 {
-    constructor(assetName,fps)
+    constructor(spriteSheetAssetName,position,fps,width,height)
     {
-        this.image = assetManager.getAsset(assetName).image;
-        this.cellWidth;
-        this.cellHeight;
-        this.animationData = assetManager.getAsset(assetName).jsonData;
-        this.animationList = this.animationData;
-        this.animationIndex = 0;
-         this.tickAmount = fps;
-         this.tick = 0;
-         this.IsLooping = true;
-         this.x = 0;
-         this.y = 0;
-         this.scale = 1;
-         this.rotation = 0;
-         this.isVisible = true;
-         this.atEndFrame = false;
-         this.isDead = false;
-    }
-    setVisibility(isVisible)
-    {
-        this.isVisible = isVisible;
-    }
-    stop()
-    {
-        this.IsLooping = false;
-    }
-    start()
-    {
+        this.spriteSheet = assetMan.getAsset(spriteSheetAssetName);
+        this.position = position;
+        this.currentAnimation;
+        this.tickAmount = fps;
+        this.tick = 0;
         this.IsLooping = true;
+        this.scale = 1;
+        this.isVisible = true;
+        this.animationIndex = 0;
+        this.displayWidth = width * this.scale;
+        this.displayHeight = height + this.scale;
+        this.currentAnimationName;
     }
-    setPosition(newPosition)
+    setCurrentAnimation(animation)
     {
-        this.x = newPosition.x;
-        this.y = newPosition.y;
+        var animationArray = this.spriteSheet.jsonData.animationList;
+        this.currentAnimationName = animation;
+        var that = this;
+        animationArray.forEach(function (element)
+        {
+            if (element.name === animation)
+            {
+                that.currentAnimation = element.spriteSheetData;
+                that.animationIndex = 0;
+            }
+        });
+       
     }
-    setRotation(angle)
+    setAnimationSpeed(speed)
     {
-        this.rotation = angle;
+        this.tickAmount = speed;
     }
-    setScale(newScale)
+    getCurrentAnimationName()
+    {
+        return this.currentAnimationName;
+    }
+    setPosition(position)
+    {
+        this.position = position;
+    }
+    setScale(scale)
     {
         this.scale = scale;
     }
     draw()
     {
-        if(this.IsLooping)
-	    {
-		    this.tick++;
-		    if(this.tick > this.tickAmount)
-		    {
-			    this.tick = 0;
-			    this.animationIndex++
-			    if(this.animationIndex === this.animationList.animationRectList.length)
-			    {
-				    this.atEndFrame = true;
-				    this.animationIndex = 0;
-			    }
-			    else
-			    {
-				    this.atEndFrame = false;
-			    }   
-		    }
-		    ctx.save();
-	        ctx.translate(this.x, this.y);
-	        ctx.rotate(this.rotation * Math.PI / 180);
-	        if(this.isVisible)
-	        {
-	    	    ctx.drawImage(this.image, this.animationList.animationRectList[this.animationIndex].x,
-	    				this.animationList.animationRectList[this.animationIndex].y, 
-						this.animationList.animationRectList[this.animationIndex].width,
-						this.animationList.animationRectList[this.animationIndex].height,
-						-this.animationList.animationRectList[this.animationIndex].width / 2, -this.animationList.animationRectList[this.animationIndex].height / 2,
-						this.animationList.animationRectList[this.animationIndex].width * this.scale,
-						this.animationList.animationRectList[this.animationIndex].height * this.scale);
-		    }
-		    ctx.restore();
-	    }
-    }
-    clean()
-    {
-        this.isDead = true;
+        if (this.IsLooping)
+        {
+            this.tick++;
+            if (this.tick > this.tickAmount)
+            {
+                this.tick = 0;
+                this.animationIndex++
+                
+                if (this.animationIndex >= this.currentAnimation.length)
+                {
+                    this.animationIndex = 0;
+                }
+            }
+
+            if (this.currentAnimation[this.animationIndex] !== 'undefined' || this.currentAnimation[this.animationIndex] !== null)
+            {
+                Renderer.drawImage(this.spriteSheet.texture, this.spriteSheet.width, this.spriteSheet.height, this.currentAnimation[this.animationIndex].x,
+                    this.currentAnimation[this.animationIndex].y, this.currentAnimation[this.animationIndex].width, this.currentAnimation[this.animationIndex].height,
+                    this.position.x, this.position.y, this.displayWidth, this.displayHeight)
+            }
+
+        }
     }
 }

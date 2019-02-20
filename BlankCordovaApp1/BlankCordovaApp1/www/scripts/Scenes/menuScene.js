@@ -23,8 +23,8 @@ class menuScene extends scene
         this.optionsButton = new menuButton("optionsButton", Renderer.physicalScreenWidth / 2 - this.buttonWidth / 2, this.yPosition * 3, this.buttonWidth, this.height);
         this.quitButton = new menuButton("QuitButton", Renderer.physicalScreenWidth / 2 - this.buttonWidth / 2, this.yPosition * 4, this.buttonWidth, this.height);
         //audio
-        this.audioManager = new audioManager();
-        this.audioManager.playSound("music", false);
+        //this.audioManager = new audioManager();
+       // this.audioManager.playSound("music", false);
         
     } 
     /**
@@ -38,6 +38,7 @@ class menuScene extends scene
         this.multiplayerButton.draw();
         this.optionsButton.draw();
         this.quitButton.draw();
+        
         super.draw();
     }
     update(dt)
@@ -58,6 +59,7 @@ class menuScene extends scene
         {
             this.menuState = { playing: false, multiplayer: false, options: false, quit: true };
         }
+        
     }
     /**
     * this is called on scene start

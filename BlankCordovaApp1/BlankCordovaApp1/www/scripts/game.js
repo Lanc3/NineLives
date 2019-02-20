@@ -77,7 +77,7 @@ class game
     draw()
     {
         Renderer.gl.viewport(0, 0, Renderer.gl.canvas.width, Renderer.gl.canvas.height);
-
+        Renderer.gl.clearColor(0, 0, 0, 0);
         Renderer.gl.clear(Renderer.gl.COLOR_BUFFER_BIT);
         
         this.SceneManager.draw();

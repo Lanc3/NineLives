@@ -9,7 +9,7 @@ class assetManager
         this.assetQueue = [];
         this.assetSuccessCount = 0;
         this.assetErrorCount = 0;
-       
+        this.jsonData;
 
         this.gl = Renderer.gl;
         if(!this.gl)
@@ -22,6 +22,7 @@ class assetManager
         this.audioContext;
         this.self = this;
         this.unlock();
+        this.finishedEvent = new CustomEvent("AssetsLoadedEvent");
     }
     unlock() {
         try {
@@ -82,9 +83,9 @@ class assetManager
         }
         return false;
     }
-    queueAssetForDownload(type,sourcePath,assetName)
+    queueAssetForDownload(type,sourcePath,assetName,jsonData)
     {
-        this.assetQueue.push({type:type,sourcePath:sourcePath,assetName:assetName});
+        this.assetQueue.push({ type: type, sourcePath: sourcePath, assetName: assetName, jsonData: jsonData });
     }
     downloadAssets(callback)
     {
@@ -103,6 +104,7 @@ class assetManager
                 var path = this.assetQueue[i].sourcePath;
                 var name = this.assetQueue[i].assetName;
                 var type = this.assetQueue[i].type;
+                var json = this.assetQueue[i].jsonData;
                 if (type === "Texture2D")
                 {
                     this.createWebGLTexture(path, name, type);
@@ -115,9 +117,48 @@ class assetManager
                 {
                     this.createAudioFile(path,name, type);
                 }
+                else if (type === "Animation")
+                {
+                    this.createJsonAsset(path, name, type,json);
+                }
                 
             }
         }
+    }
+    createJsonAsset(path, name, type,json)
+    {
+        this.jsonData = this.readJson(json);
+
+        var tex = this.gl.createTexture();
+        this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
+        // Fill the texture with a 1x1 blue pixel.
+        this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, 1, 1, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE,
+            new Uint8Array([0, 0, 255, 255]));
+        // let's assume all images are not a power of 2
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+        var textureInfo = {
+            width: 1,   // we don't know the size until it loads
+            height: 1,
+            texture: tex,
+        };
+        var that = this;
+        var img = new Image();
+        img.onload = function () {
+            textureInfo.width = img.width;
+            textureInfo.height = img.height;
+
+            that.gl.bindTexture(that.gl.TEXTURE_2D, textureInfo.texture);
+            that.gl.texImage2D(that.gl.TEXTURE_2D, 0, that.gl.RGBA, that.gl.RGBA, that.gl.UNSIGNED_BYTE, img);
+            that.assetCache[name] = new SpriteSheetData(type, path, name, textureInfo.texture, textureInfo.width, textureInfo.height, that.jsonData);
+            that.percentage(that.assetSuccessCount, that.assetQueue.length);
+            that.assetSuccessCount += 1;
+
+        }
+        img.src = path;
+
+        return textureInfo;
     }
     createAudioFile(url,name,type)
     {
@@ -143,6 +184,8 @@ class assetManager
                     node.source = that.audioContext.createBufferSource();
                     node.source.connect(that.audioContext.destination);
                     that.assetCache[name] = new Audio(type, url, name, decoded);
+                    that.percentage(that.assetSuccessCount, that.assetQueue.length);
+                    that.assetSuccessCount += 1;
                 },
                 function () { // only on error attempt to sync on frame boundary
                     console.log("err")
@@ -201,6 +244,8 @@ class assetManager
             if (request.readyState == 4 && request.status == 200) 
             {
                 that.assetCache[name] = new Shader(type, url, name, request.responseText);
+                that.percentage(that.assetSuccessCount, that.assetQueue.length);
+                that.assetSuccessCount += 1;
             }
         }
         request.send(null); 
@@ -225,16 +270,11 @@ class assetManager
         return self.animationData;
     }
 
-    isDone()
-    {
-        var count = this.successCount + this.errorCount;
-        var complete = (this.downloadQueue.length == count);
-        return complete;
-    }
+
     areAssetsDone()
     {
         var count = this.assetSuccessCount + this.assetErrorCount;
-        var complete = (this.assetQueue.length == count);
+        var complete = (this.assetQueue.length === count);
         return complete;
     }
     getAsset(name)
@@ -243,18 +283,14 @@ class assetManager
     }
     percentage(current, max)
     {
-        var percentComplete = (current * 100) / max;
+        var percentComplete = ((current + 1) * 100) / max;
         var elem = document.getElementById("myBar");
         var width = 1;
-        var id = setInterval(frame, 100);
-        var that = this;
-        function frame() {
-            if (width >= 100) {
-                clearInterval(id);
-            } else {
-                width = percentComplete;
-                elem.style.width = width + '%';
-            }
+        width = percentComplete;
+        elem.style.width = width + '%'
+        if (percentComplete === 100)
+        {
+            document.body.dispatchEvent(this.finishedEvent);
         }
     }
 }

@@ -10,29 +10,34 @@ Renderer = new renderer();
 var assetMan;
 
 assetMan = new assetManager();
-assetMan.queueAssetForDownload("Shader", "Assets/Shaders/fragment.shader","frag");
-assetMan.queueAssetForDownload("Shader", "Assets/Shaders/vertex.shader","vert");
+assetMan.queueAssetForDownload("Shader", "Assets/Shaders/fragment.shader","frag",null);
+assetMan.queueAssetForDownload("Shader", "Assets/Shaders/vertex.shader", "vert", null);
 
-assetMan.queueAssetForDownload("Texture2D", "Assets/Images/bg_jungle.png", "jungleBackground");
-assetMan.queueAssetForDownload("Texture2D", "Assets/Images/platform.png", "platform");
-assetMan.queueAssetForDownload("Texture2D", "Assets/Images/sky.jpg", "skyBackground");
-assetMan.queueAssetForDownload("Texture2D", "Assets/Images/loadscreen.png", "loadingBackground");
-assetMan.queueAssetForDownload("Texture2D", "Assets/Images/multiplayerButton.png", "multiplayerButton");
-assetMan.queueAssetForDownload("Texture2D", "Assets/Images/optionsButton.png", "optionsButton");
-assetMan.queueAssetForDownload("Texture2D", "Assets/Images/PlayButton.png", "PlayButton");
-assetMan.queueAssetForDownload("Texture2D", "Assets/Images/QuitButton.png", "QuitButton");
-assetMan.queueAssetForDownload("Audio", "Assets/Audio/Music.mp3", "music");
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/bg_jungle.png", "jungleBackground", null);
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/platform.png", "platform", null);
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/sky.jpg", "skyBackground", null);
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/loadscreen.png", "loadingBackground", null);
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/multiplayerButton.png", "multiplayerButton", null);
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/optionsButton.png", "optionsButton", null);
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/PlayButton.png", "PlayButton", null);
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/QuitButton.png", "QuitButton", null);
+assetMan.queueAssetForDownload("Audio", "Assets/Audio/Music.mp3", "music", null);
+assetMan.queueAssetForDownload("Animation", "Assets/Animations/playerOne.png", "playerOne", "Assets/Animations/playerOne.json");
 assetMan.downloadAssets();
 
 Renderer.createWebGLProgram();
-
+document.body.addEventListener("AssetsLoadedEvent", startGame, false);
 /**
  * startPoint is the starting point of the application.
  * @constructor
  */
 function startPoint()
 {
-    gameApp = new game();
+
+}
+function startGame()
+{
+    var gameApp = new game();
 }
 
 /**

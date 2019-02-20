@@ -10,13 +10,17 @@
         this.arrayOfCells.push(this.firstCell);
         this.arrayOfCells.push(this.otherCell);
         this.speed = 0.2;
-        
+        this.addstarterPlatforms();
+    }
+    addstarterPlatforms()
+    {
+        this.firstCell.addPlatform(new vector(0, 700), 100, 50,"platform");
     }
     update(dt)
     {
         var that = this;
         this.arrayOfCells.forEach(function (element) {
-            element.position.y += that.speed * dt;
+            //element.position.y += that.speed * dt;
             element.update(dt);
             if (element.position.y > that.maxDistance) {
                 element.position.y = that.resetPositionValue;

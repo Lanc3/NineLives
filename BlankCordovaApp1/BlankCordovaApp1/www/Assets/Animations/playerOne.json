@@ -1,0 +1,143 @@
+{
+	"animationList": [{
+			"name": "Jump",
+			"spriteSheetData": [{
+				"name": "jump1",
+				"x": 19,
+				"y": 3,
+				"width": 10,
+				"height": 15
+			}, {
+				"name": "jump2",
+				"x": 35,
+				"y": 2,
+				"width": 10,
+				"height": 16
+			}, {
+				"name": "jump3",
+				"x": 51,
+				"y": 3,
+				"width": 10,
+				"height": 15
+			}, {
+				"name": "jump4",
+				"x": 67,
+				"y": 3,
+				"width": 10,
+				"height": 15
+			}, {
+				"name": "jump5",
+				"x": 81,
+				"y": 2,
+				"width": 13,
+				"height": 14
+			}]
+		},
+		{
+			"name": "Left",
+			"spriteSheetData": [{
+				"name": "left1",
+				"x": 18,
+				"y": 41,
+				"width": 11,
+				"height": 15
+			}, {
+				"name": "left2",
+				"x": 34,
+				"y": 42,
+				"width": 11,
+				"height": 15
+			}, {
+				"name": "left3",
+				"x": 51,
+				"y": 42,
+				"width": 9,
+				"height": 15
+			}, {
+				"name": "left4",
+				"x": 65,
+				"y": 41,
+				"width": 12,
+				"height": 15
+			}, {
+				"name": "left5",
+				"x": 82,
+				"y": 42,
+				"width": 11,
+				"height": 15
+			}]
+		},
+		{
+			"name": "Right",
+			"spriteSheetData": [{
+				"name": "right1",
+				"x": 19,
+				"y": 23,
+				"width": 11,
+				"height": 15
+			}, {
+				"name": "right2",
+				"x": 35,
+				"y": 22,
+				"width": 12,
+				"height": 15
+			}, {
+				"name": "right3",
+				"x": 52,
+				"y": 23,
+				"width": 9,
+				"height": 15
+			}, {
+				"name": "right4",
+				"x": 67,
+				"y": 23,
+				"width": 11,
+				"height": 15
+			}, {
+				"name": "right5",
+				"x": 83,
+				"y": 22,
+				"width": 11,
+				"height": 15
+			}]
+		},
+		{
+			"name": "Idle",
+			"spriteSheetData": [{
+				"name": "idle1",
+				"x": 54,
+				"y": 74,
+				"width": 14,
+				"height": 15
+			}, {
+				"name": "idle2",
+				"x": 17,
+				"y": 91,
+				"width": 11,
+				"height": 15
+			}, {
+				"name": "idle3",
+				"x": 34,
+				"y": 91,
+				"width": 14,
+				"height": 15
+			}, {
+				"name": "idle4",
+				"x": 50,
+				"y": 91,
+				"width": 14,
+				"height": 15
+			}]
+		},
+		{
+			"name": "Para",
+			"spriteSheetData": [{
+				"name": "para",
+				"x": 15,
+				"y": 59,
+				"width": 16,
+				"height": 30
+			}]
+		}
+	]
+}
