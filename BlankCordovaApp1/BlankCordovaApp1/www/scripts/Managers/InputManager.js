@@ -2,17 +2,13 @@
  * This is the consctuctor of the input manager class 
  * @constructor
  */
-class InputManager
-{
-    constructor()
-    {
-        if ('ontouchstart' in window)
-        {
+class InputManager {
+    constructor() {
+        if ('ontouchstart' in window) {
             console.log("touchable Device")
             this.touchable = true;
         }
-        else
-        {
+        else {
             console.log("Not touchable")
             this.touchable = false;
         }
@@ -20,14 +16,14 @@ class InputManager
         * the vector position of the position on the canvas for a touch event
         * @type {vector} 
         */
-        this.touchCanvasPosition = new vector(0,0);
+        this.touchCanvasPosition = new vector(0, 0);
 
         /**
         * this is a boolean is true if touching
         * @type {boolean} 
         */
         this.touching = false;
-        
+
         /**
         * these are the ongoing touches we store
         * @type {array} 
@@ -45,7 +41,7 @@ class InputManager
         * @type {inputInfo} 
         */
         this.inputInfo;
-        
+
 
         /**
         * the time from touch start
@@ -53,20 +49,16 @@ class InputManager
         */
         this.startTouchTime;
 
-        /**
-        * the min distance for a swipe
-        * @type {number} 
-        */
-        this.swipeMinDistance = 200;
-
-        /**
-        * the max time allowed for a swipe
-        * @type {number} 
-        */
-        this.swipeMaxTime = 200;
-        this.left = false;
-        this.right = false;
-        this.tap = false;
+        this.swipeDirection;
+        this.startX;
+        this.startY;
+        this.distX;
+        this.distY;
+        this.threshold = 150; //required min distance traveled to be considered swipe
+        this.restraint = 100; // maximum distance allowed at the same time in perpendicular direction
+        this.allowedTime = 300; // maximum time allowed to travel that distance
+        this.elapsedTime;
+        this.startTime;
 
         this.setupTouchDevice(this);
     }
@@ -77,22 +69,17 @@ class InputManager
     * @param {this} self passing the self object to access this object variables because of scope 
     * 
     */
-    setupTouchDevice(self)
-    {
-        if(this.touchable) 
-	    {
-		    document.addEventListener('touchstart', passRight(this.onTouchStart, self), {passive:false});
-		    document.addEventListener('touchmove', passRight(this.onTouchMove, self), {passive:false});
-		    document.addEventListener('touchend', passRight(this.onTouchEnd, self), {passive:false});
-		    window.onorientationchange = this.resetCanvas;  
-		    window.onresize = this.resetCanvas;  
-        } 
+    setupTouchDevice(self) {
+        if (this.touchable) {
+            document.addEventListener('touchstart', passRight(this.onTouchStart, self), { passive: false });
+            document.addEventListener('touchmove', passRight(this.onTouchMove, self), { passive: false });
+            document.addEventListener('touchend', passRight(this.onTouchEnd, self), { passive: false });
+        }
     }
     /**
     *this resets the canvas
     */
-    resetCanvas()
-    {
+    resetCanvas() {
         //todo reset logic if needed
     }
     /**
@@ -100,47 +87,19 @@ class InputManager
      * @param {event} e this is the event passed through
      * @param {this} self this is the self object for scope
      */
-    onTouchStart(e,self)
-    {
+    onTouchStart(e, self) {
         e.preventDefault();
-        var touches = e.changedTouches; 
-       
-        for(var index = 0;index < touches.length;index++)
-        {
-            if(touches[index] !== 'undefined' || touches[index] !== null )
-            {
-                self.ongoingTouches.push(self.copyTouch(touches[index]));
-                self.startTouchList.push(self.copyTouch(touches[index]));
-                if (self.startTouchList.length > 1)
-                {
-                    this.last = self.startTouchList[self.startTouchList.length - 1].timeStamp;
-                    this.secondLast = self.startTouchList[self.startTouchList.length - 2].timeStamp;
-                    this.timeBetween = this.last - this.secondLast;
-                    //console.log(self.startTouchList[self.startTouchList.length - 1].timeStamp, self.startTouchList[self.startTouchList.length - 2].timeStamp, this.timeBetween);
-                    if (this.timeBetween < 500)
-                    {
-                        self.tap = true;
-                    }
-                    else
-                    {
-                        self.tap = false;
-                    }
-                }
-            }
-        }
-        self.touchCanvasPosition.x  = touches[0].pageX;
-        self.touchCanvasPosition.y = touches[0].pageY;
-        if (touches[0].pageX > Renderer.physicalScreenWidth / 2)
-        {
-            self.right = true;
-            self.left = false;
-        }
-        if (touches[0].pageX < Renderer.physicalScreenWidth / 2)
-        {
-            self.right = false;
-            self.left = true;
-        }
+        var touches = e.changedTouches[0];
 
+        self.swipeDirection = 'none';
+        self.distance = 0;
+        self.startX = touches.pageX
+        self.startY = touches.pageY
+        self.startTime = new Date().getTime() // record time when finger first makes contact with surface
+        //sets the points for single touches for buttons ect
+        self.touchCanvasPosition.x = touches.pageX;
+        self.touchCanvasPosition.y = touches.pageY;
+        
         self.touching = true;
     }
     /**
@@ -148,150 +107,62 @@ class InputManager
      * @param {*} e this is the event passed through
      * @param {*} self this is the self object for scope
      */
-    onTouchEnd(e,self)
-    {
+    onTouchEnd(e, self) {
         e.preventDefault();
-        var touches = e.changedTouches; 
-       
-        for(var index = 0;index < touches.length;index++)
-        {
-            var idx = self.ongoingTouchIndexById(touches[index].identifier);
-            if (idx >= 0) 
-            {
-                this.currentTime = Date.now();
-                this.length = Math.sqrt(Math.pow(Math.abs(touches[index].pageY - self.startTouchList[idx].pageY),2) + Math.pow(Math.abs(touches[index].pageX - self.startTouchList[idx].pageX),2));
-                this.time = self.copyTouch(touches[index]).timeStamp - self.startTouchList[idx].timeStamp;
-                //console.log(this.length + " : " + this.time)
-                if(this.length > self.swipeMinDistance && this.time < self.swipeMaxTime)
-                {
-                    this.centerPoint = new vector((touches[index].pageX + self.startTouchList[idx].pageX)/2,(touches[index].pageY + self.startTouchList[idx].pageY)/2);
-                    this.deltaY = touches[index].pageY - self.startTouchList[idx].pageY;
-                    this.deltaX = touches[index].pageX - self.startTouchList[idx].pageX;
-                    this.angle = Math.atan2(this.deltaY,this.deltaX);
-                    
-                    console.log("Swipe Detected. length : " + this.length+ " time : " + this.time)
-                }
-                
-                self.ongoingTouches.splice(idx, 1);  // remove it; we're done
-               // self.startTouchList.splice(idx, 1);
-                self.touchCanvasPosition.x = -10;
-                self.touchCanvasPosition.y = - 10;
-                self.isTouching = false;
-                self.right = false;
-                self.left = false;
+        var touches = e.changedTouches[0];
+
+        self.distX = touches.pageX - self.startX // get horizontal dist traveled by finger while in contact with surface
+        self.distY = touches.pageY - self.startY // get vertical dist traveled by finger while in contact with surface
+        self.elapsedTime = new Date().getTime() - self.startTime // get time elapsed
+        if (self.elapsedTime <= self.allowedTime) { // first condition for awipe met
+            if (Math.abs(self.distX) >= self.threshold && Math.abs(self.distY) <= self.restraint) { // 2nd condition for horizontal swipe met
+                self.swipeDirection = (self.distX < 0) ? 'left' : 'right' // if dist traveled is negative, it indicates left swipe
             }
-            else 
-            {      
-                console.log("can't figure out which touch to end");
+            else if (Math.abs(self.distY) >= self.threshold && Math.abs(self.distX) <= self.restraint) { // 2nd condition for vertical swipe met
+                self.swipeDirection = (self.distY < 0) ? 'up' : 'down' // if dist traveled is negative, it indicates up swipe
             }
         }
+        self.touchCanvasPosition.x = -1000;
+        self.touchCanvasPosition.y = -1000;
     }
-    /**
-     * this wraps the angle around the 360 mark
-     * @param {number} angle 
-     */
-    angleTruncate(angle)
-    {
-        if(angle < 0)
-        {
-            angle+= Math.PI * 2;
-        }
-    }
-    /**
-     * this gets the angle between two points
-     * @param {number} firstX 
-     * @param {number} firstY 
-     * @param {number} secondX 
-     * @param {number} secondY 
-     */
-    angleBetweenTwoPoints(firstX,firstY,secondX,secondY)
-    {
-        this.deltaY = secondY - firstY;
-        this.deltaX = secondX - firstX;
-        return Math.atan2(this.deltaY,this.deltaX);
-    }
+
     /**
      * this is the on touch move 
      * @param {event} e 
      * @param {this} self 
      */
-    onTouchMove(e,self)
-    {
-        e.preventDefault();
-        var touches = e.changedTouches; 
-        for(var index = 0;index < touches.length;index++)
-        {
-            var color = "#FF0000"
-            var idx = self.ongoingTouchIndexById(touches[index].identifier);
-            if (idx >= 0) 
-            {
-                
-                self.ongoingTouches.splice(idx, 1, self.copyTouch(touches[index]));
-                
-               // swap in the new touch record
-                //console.log(e.changedTouches);
-            }
-            else 
-            {
-                console.log("can't figure out which touch to continue");
-            }
-            if (touches[0].pageX > Renderer.physicalScreenWidth / 2) {
-                self.right = true;
-                self.left = false;
-            }
-            if (touches[0].pageX < Renderer.physicalScreenWidth / 2) {
-                self.right = false;
-                self.left = true;
-            }
-        }
+    onTouchMove(e, self) {
+        e.preventDefault();    
+        
     }
     /**
      * this returns the information for the touch events
      */
-    getIntupInfo()
-    {
+    getIntupInfo() {
         this.inputInfo = {};
         this.vector = new vector(this.touchCanvasPosition.x, this.touchCanvasPosition.y);
-        this.inputInfo = { position: this.vector, isTouching: this.touching, onGoingTouch: this.ongoingTouches };
+        this.inputInfo = { position: this.vector, isTouching: this.touching, swipeDirection: this.swipeDirection };
         return this.inputInfo;
     }
     /**
      * this packages the touch events information into an dict
      * @param {touch} touch 
      */
-    copyTouch(touch)
-    {
-        return {identifier: 0, pageX: touch.pageX, pageY: touch.pageY, timeStamp: Date.now()};    
+    copyTouch(touch) {
+        return { identifier: 0, pageX: touch.pageX, pageY: touch.pageY, timeStamp: Date.now() };
     }
-    /**
-     * this copies the color for the object, not used at the moments
-     * @param {touch} touch 
-     */
-    colorForTouch(touch)
-    {
-        var r = touch.identifier % 16;
-        var g = Math.floor(touch.identifier / 3) % 16;
-        var b = Math.floor(touch.identifier / 7) % 16;
-        r = r.toString(16); // make it a hex digit
-        g = g.toString(16); // make it a hex digit
-        b = b.toString(16); // make it a hex digit
-        var color = "#" + r + g + b;
-        return color;
-    }
+   
     /**
      * this gets the touch index by id
      * @param {number} idToFind 
      */
-    ongoingTouchIndexById(idToFind)
-    {
-        for (var i = 0; i < this.ongoingTouches.length; i++) 
-        {
+    ongoingTouchIndexById(idToFind) {
+        for (var i = 0; i < this.ongoingTouches.length; i++) {
             var id = this.ongoingTouches[i].identifier;
-            if (id === idToFind) 
-            {
+            if (id === idToFind) {
                 return i;
             }
-          }
-          return -1;    // not found
+        }
+        return -1;    // not found
     }
 }
