@@ -30,7 +30,7 @@ class Player extends rectangle
         this.collisionObjects;
         this.self = this;
         this.currentPlayerState = playerState.IDLE;
-        this.gravity = 0.7;
+        this.gravity = 0.5;
         this.standing = false;
         this.jumpHeight = 0;
         this.jumpSpeed = 1;
@@ -72,22 +72,17 @@ class Player extends rectangle
             }
         }
     }
-    right(dt)
+    moveTo(point,dt)
     {
-        if (this.spriteSheet.currentAnimationName !== "Right") {
-            this.spriteSheet.setCurrentAnimation("Right");
-            this.spriteSheet.setAnimationSpeed(10);
+        let distance = Math.abs(point.x - this.position.x);
+        if (point.x !== -1) {
+            if (point.x > this.position.x) {
+                this.position.x += this.speed * dt;
+            }
+            if (point.x < this.position.x) {
+                this.position.x -= this.speed * dt;
+            }
         }
-        this.position.x += this.speed * dt;
-    }
-    left(dt)
-    {
-        
-        if (this.spriteSheet.currentAnimationName !== "Left") {
-            this.spriteSheet.setCurrentAnimation("Left");
-            this.spriteSheet.setAnimationSpeed(10);
-        }
-        this.position.x -= this.speed * dt;
     }
     calculateCollisions()
     {
@@ -138,36 +133,12 @@ class Player extends rectangle
 
     handleInput(dt)
     {
-
-        if (this.inputControlller.right)
+        let command = this.inputControlller.handleInput(dt);
+        if (command)
         {
-            this.currentPlayerState = playerState.RIGHT;
-            
+            command.execute(this);
         }
-        else if (this.inputControlller.left )
-        {
-            this.currentPlayerState = playerState.LEFT;
-           
-        }
-        else
-        {
-            if (!this.standing) {
-                if (this.spriteSheet.currentAnimationName !== "Para") {
-                    this.spriteSheet.setCurrentAnimation("Para");
-                    this.spriteSheet.setAnimationSpeed(10);
-                }
-                
-            }
-            else {
-                if (this.spriteSheet.currentAnimationName !== "Idle") {
-                    this.spriteSheet.setCurrentAnimation("Idle");
-                    this.spriteSheet.setAnimationSpeed(30);
-                }
-                
-            }
-        }
-
-        
+       
     }
     setCollisionObjects(objectList)
     {

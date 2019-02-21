@@ -1,10 +1,15 @@
-﻿class Command
+﻿var CommandState = Object.freeze({ "CREATED": 1, "FINISHED": 2 });
+class Command
 {
-    constructor()
+    constructor(state)
+    {
+        this.state = state;
+    }
+    execute(GameEntity)
     {
 
     }
-    execute(GameEntity)
+    undo()
     {
 
     }

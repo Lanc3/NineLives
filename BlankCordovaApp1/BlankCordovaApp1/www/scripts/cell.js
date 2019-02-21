@@ -4,7 +4,7 @@
         this.position = position;
         this.platformList = [];
         this.screenHalfWidth = Renderer.physicalScreenWidth / 2;
-        this.platformList.push(new platform(new vector(this.screenHalfWidth, this.position.y + 200), 80, 30,"platform"));
+        this.platformList.push(new platform(new vector(this.screenHalfWidth, this.position.y + 200), 80, 50,"platform"));
         this.yPositionAdjust = 5;
     }
     draw()

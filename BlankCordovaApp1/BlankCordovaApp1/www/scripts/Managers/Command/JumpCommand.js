@@ -1,11 +1,12 @@
 ﻿class JumpCommand extends Command
 {
-    constructor()
+    constructor(state)
     {
-
+        super(state);
     }
-    execute(gameEntity)
+    execute(receiver)
     {
-        gameEntity.jump();
+        receiver.jump();
+        this.state = CommandState.FINISHED;
     }
 }

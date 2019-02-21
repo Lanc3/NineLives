@@ -2,8 +2,11 @@
  * This is the consctuctor of the input manager class 
  * @constructor
  */
-class InputManager {
+var SwipeDirection = Object.freeze({ "UP": 1, "DOWN": 2, "LEFT": 3, "RIGHT": 4 ,"NONE":5 });
+class InputManager extends Invoker
+{
     constructor() {
+        super();
         if ('ontouchstart' in window) {
             console.log("touchable Device")
             this.touchable = true;
@@ -16,8 +19,8 @@ class InputManager {
         * the vector position of the position on the canvas for a touch event
         * @type {vector} 
         */
-        this.touchCanvasPosition = new vector(0, 0);
-
+        this.touchCanvasPosition = new vector(-1, -1);
+        this.movingTouch = new vector(-1, -1);
         /**
         * this is a boolean is true if touching
         * @type {boolean} 
@@ -59,7 +62,9 @@ class InputManager {
         this.allowedTime = 300; // maximum time allowed to travel that distance
         this.elapsedTime;
         this.startTime;
-
+        this.jumpCommand = new JumpCommand(CommandState.CREATED);
+        this.moveCommand = new MoveCommand(CommandState.CREATED);
+        this.moving;
         this.setupTouchDevice(this);
     }
 
@@ -89,7 +94,7 @@ class InputManager {
      */
     onTouchStart(e, self) {
         e.preventDefault();
-        var touches = e.changedTouches[0];
+        let touches = e.changedTouches[0];
 
         self.swipeDirection = 'none';
         self.distance = 0;
@@ -97,9 +102,8 @@ class InputManager {
         self.startY = touches.pageY
         self.startTime = new Date().getTime() // record time when finger first makes contact with surface
         //sets the points for single touches for buttons ect
-        self.touchCanvasPosition.x = touches.pageX;
-        self.touchCanvasPosition.y = touches.pageY;
-        
+        self.touchCanvasPosition = new vector(touches.pageX, touches.pageY);
+        self.movingTouch = new vector(touches.pageX, touches.pageY);
         self.touching = true;
     }
     /**
@@ -109,21 +113,22 @@ class InputManager {
      */
     onTouchEnd(e, self) {
         e.preventDefault();
-        var touches = e.changedTouches[0];
+        let touches = e.changedTouches[0];
 
         self.distX = touches.pageX - self.startX // get horizontal dist traveled by finger while in contact with surface
         self.distY = touches.pageY - self.startY // get vertical dist traveled by finger while in contact with surface
         self.elapsedTime = new Date().getTime() - self.startTime // get time elapsed
         if (self.elapsedTime <= self.allowedTime) { // first condition for awipe met
             if (Math.abs(self.distX) >= self.threshold && Math.abs(self.distY) <= self.restraint) { // 2nd condition for horizontal swipe met
-                self.swipeDirection = (self.distX < 0) ? 'left' : 'right' // if dist traveled is negative, it indicates left swipe
+                self.swipeDirection = (self.distX < 0) ? SwipeDirection.LEFT : SwipeDirection.RIGHT // if dist traveled is negative, it indicates left swipe
             }
             else if (Math.abs(self.distY) >= self.threshold && Math.abs(self.distX) <= self.restraint) { // 2nd condition for vertical swipe met
-                self.swipeDirection = (self.distY < 0) ? 'up' : 'down' // if dist traveled is negative, it indicates up swipe
+                self.swipeDirection = (self.distY < 0) ? SwipeDirection.UP : SwipeDirection.DOWN // if dist traveled is negative, it indicates up swipe
             }
         }
-        self.touchCanvasPosition.x = -1000;
-        self.touchCanvasPosition.y = -1000;
+        self.touchCanvasPosition = new vector(-1,-1);
+        self.movingTouch = new vector(-1, -1);
+        self.moving = false;
     }
 
     /**
@@ -132,17 +137,33 @@ class InputManager {
      * @param {this} self 
      */
     onTouchMove(e, self) {
+        let touches = e.changedTouches[0];
         e.preventDefault();    
-        
+        self.movingTouch = new vector(touches.pageX, touches.pageY);
+        self.moving = true;
     }
     /**
      * this returns the information for the touch events
      */
     getIntupInfo() {
         this.inputInfo = {};
-        this.vector = new vector(this.touchCanvasPosition.x, this.touchCanvasPosition.y);
-        this.inputInfo = { position: this.vector, isTouching: this.touching, swipeDirection: this.swipeDirection };
+        this.inputInfo = { position: this.touchCanvasPosition, isTouching: this.touching, swipeDirection: this.swipeDirection, movingTouches: this.movingTouch };
         return this.inputInfo;
+    }
+    handleInput(dt)
+    {
+        if (this.swipeDirection === SwipeDirection.UP)
+        {
+            this.swipeDirection = SwipeDirection.NONE;
+            return this.jumpCommand;
+        }
+        else {
+            this.moveCommand = new MoveCommand(CommandState.CREATED, this.movingTouch,dt);
+            return this.moveCommand;
+        }
+
+        console.log(this.moving);
+        return null;
     }
     /**
      * this packages the touch events information into an dict
