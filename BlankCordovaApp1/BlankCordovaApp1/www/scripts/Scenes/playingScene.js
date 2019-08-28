@@ -10,14 +10,20 @@ class playingScene extends scene
     constructor(title, inputController)
     {
         super(title, inputController);
-       
+        this.levelmanager = new levelManger();
+        this.player = new Player(new vector(175, 100), 50, 50, 0.4, inputController, this.levelmanager);
+
         this.gameIsFinished = false;
     }
   
     update(dt)
     {
       
-        
+        this.levelmanager.setPlayerCurrentHeight(this.player.position);
+        this.levelmanager.setPlayerCurrentPosition(this.player.position);
+        this.levelmanager.update(dt);
+        this.player.setCollisionObjects(this.levelmanager.arrayOfCells);
+        this.player.update(dt);
         super.update(dt);
     }
     /**
@@ -32,6 +38,9 @@ class playingScene extends scene
     */
     draw()
     {
+        this.levelmanager.draw();
+        this.player.draw();
+
         super.draw();
     }
     /**
@@ -40,6 +49,7 @@ class playingScene extends scene
     */
     start()
     {
+        this.levelmanager.start();
         super.start();
     }
     /**
@@ -48,10 +58,10 @@ class playingScene extends scene
     */
     stop()
     {
-        if(this.gameIsFinished === true)
-        {
-            this.reset(); 
-        }
+        this.levelmanager.stop();
+        this.levelmanager = new levelManger();
+        this.player = new Player(new vector(175, 100), 50, 50, 0.4, this.inputController, this.levelmanager);
+
         super.stop();
     }
 }

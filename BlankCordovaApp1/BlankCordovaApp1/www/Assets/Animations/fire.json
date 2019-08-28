@@ -1,0 +1,51 @@
+{
+  "animationList": [
+    {
+      "name": "fire",
+      "spriteSheetData": [
+        {
+          "name": "fire1",
+          "x": 0,
+          "y": 0,
+          "width": 58,
+          "height": 72
+        },
+        {
+          "name": "fire2",
+          "x": 58,
+          "y": 0,
+          "width": 58,
+          "height": 72
+        },
+        {
+          "name": "fire3",
+          "x": 116,
+          "y": 0,
+          "width": 58,
+          "height": 72
+        },
+        {
+          "name": "fire4",
+          "x": 0,
+          "y": 72,
+          "width": 58,
+          "height": 72
+        },
+        {
+          "name": "fire5",
+          "x": 58,
+          "y": 72,
+          "width": 58,
+          "height": 72
+        },
+        {
+          "name": "fire6",
+          "x": 116,
+          "y": 72,
+          "width": 58,
+          "height": 72
+        }
+      ]
+    }
+  ]
+}

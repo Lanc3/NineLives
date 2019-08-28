@@ -53,6 +53,10 @@ class game
         {
             if (this.SceneManager.currentScene.menuState.playing)
             {
+                this.SceneManager.goToScene("Playing Scene");
+            }
+            else if (this.SceneManager.currentScene.menuState.tutorial)
+            {
                 this.SceneManager.goToScene("Tutorial Scene");
             }
             else if (this.SceneManager.currentScene.menuState.multiplayer)
@@ -65,7 +69,14 @@ class game
             }
             else if (this.SceneManager.currentScene.menuState.quit)
             {
-                this.SceneManager.goToScene("Game Over Scene");
+                navigator.app.exitApp();
+            }
+        }
+        if (this.SceneManager.currentScene.title === "Tutorial Scene")
+        {
+            if (this.SceneManager.currentScene.isFinished)
+            {
+                this.SceneManager.goToScene("Menu Scene");
             }
         }
         //loop

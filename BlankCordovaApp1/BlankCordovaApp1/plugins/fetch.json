@@ -39,5 +39,29 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "org.dartlang.phonegap.gyroscope": {
+        "source": {
+            "type": "local",
+            "path": "C:\\Users\\Lanc3\\Desktop\\cordova-plugin-gyroscope-master"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-device-orientation": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-device-orientation"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-device-motion": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-device-motion"
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }

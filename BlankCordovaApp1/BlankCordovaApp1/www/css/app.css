@@ -2,7 +2,7 @@ body {
     margin: 0;
     overflow: hidden;
     background-color: black;
-    
+    color: orange;
 }
 
 #game-app {
@@ -18,16 +18,332 @@ body {
 canvas {
     width: 100%;
     height: 100%;
+    position:absolute;
+}
+#timer {
+    position: absolute;
+    z-index: 1;
+}
+.tutorialHelpLeft {
+    color: orange;
+    opacity: 0.75;
+    text-align: center;
+    font-size: 26px;
+    position: absolute;
+    top: 360px;
+    left: 10px;
+    z-index: 1;
+    width: fit-content;
+    height: fit-content;
+    padding: 2px;
+    background: #FEFFFF;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    border: #FFA500 solid 6px;
+    visibility: hidden;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
+.tutorialHelpLeft:after {
+    content: '';
+    position: absolute;
+    border-style: solid;
+    border-width: 10px 10px 10px 0;
+    border-color: transparent #FEFFFF;
+    display: block;
+    width: 0;
+    z-index: 1;
+    left: -10px;
+    top: 50%;
 }
 
+.tutorialHelpLeft:before {
+    content: '';
+    position: absolute;
+    border-style: solid;
+    border-width: 15px 15px 15px 0;
+    border-color: transparent #FFA500;
+    display: block;
+    width: 0;
+    z-index: 0;
+    left: -21px;
+    top: 50%;
+}
+.tutorialHelpRight {
+    color: orange;
+    opacity: 0.75;
+    text-align: center;
+    font-size: 26px;
+    position: absolute;
+    top: 360px;
+    left: 10px;
+    z-index: 1;
+    width: fit-content;
+    height: fit-content;
+    padding: 2px;
+    background: #FEFFFF;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    border: #FFA500 solid 6px;
+    visibility: hidden;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
+    .tutorialHelpRight:after {
+        content: '';
+        position: absolute;
+        border-style: solid;
+        border-width: 10px 0 10px 10px;
+        border-color: transparent #FEFFFF;
+        display: block;
+        width: 0;
+        z-index: 1;
+        right: -8%;
+        top: 58%;
+    }
+
+    .tutorialHelpRight:before {
+        content: '';
+        position: absolute;
+        border-style: solid;
+        border-width: 15px 0 15px 10px;
+        border-color: transparent #FFA500;
+        display: block;
+        width: 0;
+        z-index: 0;
+        right: -12%;
+        top: 50%;
+    }
+.tutorialHelpTop {
+    color: orange;
+    opacity: 0.75;
+    text-align: center;
+    font-size: 26px;
+    position: absolute;
+    top: 70px;
+    left: 10px;
+    z-index: 1;
+    width: fit-content;
+    height: fit-content;
+    padding: 2px;
+    background: #FEFFFF;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    border: #FFA500 solid 6px;
+    visibility: hidden;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+    .tutorialHelpTop:after {
+        content: '';
+        position: absolute;
+        border-style: solid;
+        border-width: 0 10px 10px;
+        border-color: #FEFFFF transparent;
+        display: block;
+        width: 0;
+        z-index: 1;
+        top: -10px;
+        left: 50%;
+    }
+
+    .tutorialHelpTop:before {
+        content: '';
+        position: absolute;
+        border-style: solid;
+        border-width: 0 15px 15px;
+        border-color: #FFA500 transparent;
+        display: block;
+        width: 0;
+        z-index: 0;
+        top: -21px;
+        left: 50%;
+    }
+.tutorialHelpBottom {
+    color: orange;
+    opacity: 0.75;
+    text-align: center;
+    font-size: 26px;
+    position: absolute;
+    top: 360px;
+    left: 10px;
+    z-index: 1;
+    width: fit-content;
+    height: fit-content;
+    padding: 2px;
+    background: #FEFFFF;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    border: #FFA500 solid 6px;
+    visibility: hidden;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+    .tutorialHelpBottom:after {
+        content: '';
+        position: absolute;
+        border-style: solid;
+        border-width: 10px 10px 0;
+        border-color: #FEFFFF transparent;
+        display: block;
+        width: 0;
+        z-index: 1;
+        bottom: -10px;
+        left: 50%;
+    }
+
+    .tutorialHelpBottom:before {
+        content: '';
+        position: absolute;
+        border-style: solid;
+        border-width: 15px 15px 0;
+        border-color: #FFA500 transparent;
+        display: block;
+        width: 0;
+        z-index: 0;
+        bottom: -21px;
+        left: 50%;
+    }
+
+#button {
+    background-color: orange;
+    border: none;
+    color: black;
+    padding: 10px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 26px;
+    margin: 4px 2px;
+    border-radius: 15px;
+    position:absolute;
+    top: 650px;
+    left:250px;
+    z-index:1;
+    visibility:hidden;
+}
 #myProgress {
     width: 100%;
     background-color: grey;
-    position:absolute;
+    position: absolute;
 }
 
 #myBar {
     width: 1%;
     height: 30px;
     background-color: orangered;
+}
+#coins {
+    border-radius: 25px;
+    border: 4px solid orange;
+    height: 40px;
+    color: orange;
+    text-align: center;
+    font-size: 26px;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
+#time {
+    position:absolute;
+    top:0px;
+    border-radius: 25px;
+    border: 4px solid orange;
+    height: 40px;
+    color: orange;
+    text-align: center;
+    font-size: 26px;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
+#score {
+    position: absolute;
+    top: 0px;
+    border-radius: 25px;
+    border: 4px solid orange;
+    height: 40px;
+    color: orange;
+    text-align: center;
+    font-size: 26px;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+#ui-container {
+    border-radius: 25px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 1;
+    visibility: hidden;
+}
+.movable-container{
+    position:absolute;
+}
+
+.loader {
+    position: absolute;
+    top: calc(50% - 32px);
+    left: calc(50% - 32px);
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    perspective: 800px;
+}
+
+.inner {
+    position: absolute;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+    .inner.one {
+        left: 0%;
+        top: 0%;
+        animation: rotate-one 1s linear infinite;
+        border-bottom: 3px solid #EFEFFA;
+    }
+
+    .inner.two {
+        right: 0%;
+        top: 0%;
+        animation: rotate-two 1s linear infinite;
+        border-right: 3px solid #EFEFFA;
+    }
+
+    .inner.three {
+        right: 0%;
+        bottom: 0%;
+        animation: rotate-three 1s linear infinite;
+        border-top: 3px solid #EFEFFA;
+    }
+
+@keyframes rotate-one {
+    0% {
+        transform: rotateX(35deg) rotateY(-45deg) rotateZ(0deg);
+    }
+
+    100% {
+        transform: rotateX(35deg) rotateY(-45deg) rotateZ(360deg);
+    }
+}
+
+@keyframes rotate-two {
+    0% {
+        transform: rotateX(50deg) rotateY(10deg) rotateZ(0deg);
+    }
+
+    100% {
+        transform: rotateX(50deg) rotateY(10deg) rotateZ(360deg);
+    }
+}
+
+@keyframes rotate-three {
+    0% {
+        transform: rotateX(35deg) rotateY(55deg) rotateZ(0deg);
+    }
+
+    100% {
+        transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg);
+    }
 }

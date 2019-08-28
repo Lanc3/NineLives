@@ -61,7 +61,7 @@ class Animation
                     this.animationIndex = 0;
                 }
             }
-
+            
             if (this.currentAnimation[this.animationIndex] !== 'undefined' || this.currentAnimation[this.animationIndex] !== null)
             {
                 Renderer.drawImage(this.spriteSheet.texture, this.spriteSheet.width, this.spriteSheet.height, this.currentAnimation[this.animationIndex].x,

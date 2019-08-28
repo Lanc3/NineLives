@@ -4,7 +4,7 @@ class renderer
     {
         this.canvas;
         this.gl;
-        this.physicalScreenWidth = window.screen.width;
+        this.physicalScreenWidth = window.screen.width+15;
         this.physicalScreenHeight = window.screen.height;
         this.webglHelper = new WebGLHelper(assetManager);
         this.initCanvas(this.physicalScreenWidth, this.physicalScreenHeight)
@@ -40,6 +40,7 @@ class renderer
 
         this.canvas.style.width = this.width + 'px';
         this.canvas.style.height = this.height + 'px';
+        this.canvas.style.position = "absolute";
         this.div.appendChild(this.canvas);
     }
 

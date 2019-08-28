@@ -7,17 +7,21 @@
  * @param {color} color this is the hex value for a color "#FF0000"
  * @constructor
  */
-class rectangle
+class rectangle extends collisionObjectType
 {
-    constructor(x,y,w,h)
+    constructor(x,y,w,h,collisionType)
     {
+        super(collisionType);
         this.x = x;
         this.y = y;
+        this.min = new vector(this.x, this.y);
         this.botomRightX = x + w;
         this.bottomRightY = y + h;
+        this.max = new vector(this.botomRightX, this.bottomRightY);
 	    this.width = w;
         this.height = h;
         this.self = this;
+        this.texture2 = assetMan.getAsset("wall");
     }
     /**
     * This directly sets the position of the rectangle
@@ -45,14 +49,13 @@ class rectangle
     */
     intersects(b)
     {
-        if (this.x - (this.width/2) < b.x + (b.width/2) &&
-			this.x + (this.width/2) > b.x - (b.width/2) &&
-			this.y - (this.height/2) < b.y + (b.height/2) &&
-			this.y + (this.height/2) > b.y - (b.height/2))
-		{
-            return true;
-		}
-		return false;
+        
+        return (
+            this.max.x < b.min.x ||
+            this.max.y < b.min.y ||
+            this.min.x > b.max.x ||
+            this.min.y > b.max.y
+        );
     }
     contains(point)
     {
@@ -62,11 +65,21 @@ class rectangle
         }
         return false;
     }
+    inbetween(b)
+    {
+        if (this.x - (this.width / 2) < b.x + (b.width / 2) &&
+            this.x + (this.width / 2) > b.x - (b.width / 2) &&
+            this.y - (this.height / 2) < b.y + (b.height / 2) &&
+            this.y + (this.height / 2) > b.y - (b.height / 2)) {
+            return true;
+        }
+        return false;
+    }
     /**
     * the draw function, draws four line to make a recangle
     */
     draw()
     {
-
+        
     }
 }

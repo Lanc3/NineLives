@@ -15,26 +15,32 @@ const playerState = {
 }
 class Player extends rectangle
 {
-    constructor(startPosition, width, height, speed, inputController)
+    constructor(startPosition, width, height, speed, inputController,levelManager)
     {
-        super(startPosition.x, startPosition.y, width, height);
+        super(startPosition.x, startPosition.y, width, height, collisionType.PLAYER);
         this.position = startPosition;
+        this.feet = new vector(this.position.x + 25, this.position.y + 48);
         this.direction = new vector(0,0);
         this.speed = speed;
         this.width = width;
         this.height = height;
         this.inputControlller = inputController;
         this.spriteSheet = new Animation("playerOne",this.position, 10, width, height);
-        this.spriteSheet.setCurrentAnimation("Left");
+        this.spriteSheet.setCurrentAnimation("Idle");
+        this.levelManager = levelManager;
         this.collisionManager = new CollisionManager();
-        this.collisionObjects;
+        this.collisionObjects = this.levelManager.arrayOfCells;
         this.self = this;
         this.currentPlayerState = playerState.IDLE;
         this.gravity = 0.5;
         this.standing = false;
         this.jumpHeight = 0;
         this.jumpSpeed = 1;
+        this.audioManager = new audioManager();
+        this.coinsCollectedAmount = 0;
         
+        this.coinAmount = 0;
+        this.collisionType = Object.freeze({ "PLAYER": 1, "COIN": 2, "PLATFORM": 3, "SPIKE": 4, "GHOST": 5 });
     }
     /**
     * Function to to update the local position and the rects position
@@ -42,7 +48,7 @@ class Player extends rectangle
     update(dt)
     {
         this.handleInput(dt);
-
+        this.feet = new vector(this.position.x + 25, this.position.y + 45);
 
         this.jumpHeight -= 0.006 *dt;
         if (this.jumpHeight <= 0)
@@ -58,7 +64,24 @@ class Player extends rectangle
 
         this.calculateCollisions();
        
-       
+        //document.getElementById("gyro").innerHTML = " Y: " + this.inputControlller.speed.y;
+        this.position.x += this.inputControlller.Pitch / 40 * dt;
+        if (this.inputControlller.Pitch > 20)
+        {
+            this.currentPlayerState = playerState.RIGHT;
+            this.spriteSheet.setCurrentAnimation("Right");
+        }
+        else if (this.inputControlller.Pitch < 20)
+        {
+            this.currentPlayerState = playerState.LEFT;
+            this.spriteSheet.setCurrentAnimation("Left");
+        }
+        else
+        {
+            this.currentPlayerState = playerState.IDLE;
+            this.spriteSheet.setCurrentAnimation("Idle");
+        }
+
     }
     jump()
     {
@@ -67,48 +90,67 @@ class Player extends rectangle
             this.standing = false;
             this.jumpHeight = 2.5;
             if (this.spriteSheet.currentAnimationName !== "Jump") {
-                this.spriteSheet.setCurrentAnimation("Jump");
-                this.spriteSheet.setAnimationSpeed(5);
+                //this.spriteSheet.setCurrentAnimation("Jump");
+                //this.spriteSheet.setAnimationSpeed(5);
             }
         }
     }
-    moveTo(point,dt)
+    moveTo(speed,dt)
     {
-        let distance = Math.abs(point.x - this.position.x);
-        if (point.x !== -1) {
-            if (point.x > this.position.x) {
-                this.position.x += this.speed * dt;
-            }
-            if (point.x < this.position.x) {
-                this.position.x -= this.speed * dt;
-            }
-        }
+       
+   
     }
     calculateCollisions()
     {
-        var that = this;
+        let that = this;
+        
         if (this.collisionObjects !== 'undefined' || this.collisionObjects !== null) {
+           
+
             this.collisionObjects.forEach(function (element) {
-                var arrayOfPlatforms = element.platformList;
-                arrayOfPlatforms.forEach(function (platform) {
-                    if (that.intersects(platform)) {
+                let listOfCollidableObjects = element.listOfCollidableObjects;
+                
+                listOfCollidableObjects.forEach(function (object) {
+                    if (object.type === collisionType.PLATFORM) {
                         
-                        var offsetX = that.collisionManager.getHorizontalIntersectionDepth(that, platform);
-                        var offsetY = that.collisionManager.getVirticalIntersectionDepth(that, platform);
-    
-                        if (Math.abs(offsetX) > Math.abs(offsetY)) {
-                            that.position.y += offsetY;
-                            that.standing = true;
+                        if (that.intersects(object)) {
+
+                            var offsetX = that.collisionManager.getHorizontalIntersectionDepth(that, object);
+                            var offsetY = that.collisionManager.getVirticalIntersectionDepth(that, object);
+
+                            if (Math.abs(offsetX) > Math.abs(offsetY)) {
+                                that.position.y += offsetY;
+                                that.standing = true;
+
+                            }
+                            else {
+                                that.position.x += offsetX;
+                            }
                         }
                         else {
-                            that.position.x += offsetX;
+                            that.standing = false;
+                        }
+                    }
+                    else if (object.type === collisionType.COIN)
+                    {
+                        if (that.inbetween(object)) {
+                            if (!object.isCollected) {
+                                object.collect();
+                                that.coinAmount++;
+                                that.levelManager.setPlayerCoinAmount(that.coinAmount);
+                                that.audioManager.playSound("coinPickUp", false);
+                            }
                         }
                     }
 
-                    
                 });
             });
+            
         }
+    }
+    getCollectedCoins()
+    {
+        return this.coinsCollectedAmount;
     }
     wrapPlayerInScreen()
     {
@@ -142,8 +184,9 @@ class Player extends rectangle
     }
     setCollisionObjects(objectList)
     {
-        this.collisionObjects = objectList;
+       // this.collisionObjects = objectList;
     }
+    
     intersects(object)
     {
         return super.intersects(object);
@@ -163,5 +206,6 @@ class Player extends rectangle
     draw()
     {
         this.spriteSheet.draw();
+        super.draw();
     }
 }

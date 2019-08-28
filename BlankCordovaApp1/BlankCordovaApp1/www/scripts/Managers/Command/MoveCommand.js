@@ -5,7 +5,6 @@
         super(state);
         this.point = point;
         this.deltaTime = deltaTime;
-        
     }
     execute(receiver)
     {

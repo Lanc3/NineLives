@@ -8,7 +8,7 @@
 var Renderer;
 Renderer = new renderer();
 var assetMan;
-
+var collisionType = Object.freeze({ "PLAYER": 1, "COIN": 2, "PLATFORM": 3, "SPIKE": 4, "GHOST": 5 });
 assetMan = new assetManager();
 assetMan.queueAssetForDownload("Shader", "Assets/Shaders/fragment.shader","frag",null);
 assetMan.queueAssetForDownload("Shader", "Assets/Shaders/vertex.shader", "vert", null);
@@ -21,8 +21,27 @@ assetMan.queueAssetForDownload("Texture2D", "Assets/Images/multiplayerButton.png
 assetMan.queueAssetForDownload("Texture2D", "Assets/Images/optionsButton.png", "optionsButton", null);
 assetMan.queueAssetForDownload("Texture2D", "Assets/Images/PlayButton.png", "PlayButton", null);
 assetMan.queueAssetForDownload("Texture2D", "Assets/Images/QuitButton.png", "QuitButton", null);
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/spring.png", "springButton", null);
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/spike.png", "spike", null);
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/wall.png", "wall", null);
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/play.png", "play", null);
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/tutorial.png", "tutorial", null);
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/multiplayer.png", "multiplayer", null);
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/options.png", "options", null);
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/quit.png", "quit", null);
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/back.png", "back", null);
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/menu.png", "menu", null);
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/menuBackground.png", "menuBackground", null);
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/skyLoop.png", "skyLoop", null);
 assetMan.queueAssetForDownload("Audio", "Assets/Audio/Music.mp3", "music", null);
+assetMan.queueAssetForDownload("Audio", "Assets/Audio/countdown-a.oga", "count-a", null);
+assetMan.queueAssetForDownload("Audio", "Assets/Audio/countdown-b.oga", "count-b", null);
+assetMan.queueAssetForDownload("Audio", "Assets/Audio/coin.wav", "coinPickUp", null);
 assetMan.queueAssetForDownload("Animation", "Assets/Animations/playerOne.png", "playerOne", "Assets/Animations/playerOne.json");
+assetMan.queueAssetForDownload("Animation", "Assets/Animations/coin.png", "coin", "Assets/Animations/coin.json");
+assetMan.queueAssetForDownload("Animation", "Assets/Animations/clock.png", "clock", "Assets/Animations/clock.json");
+assetMan.queueAssetForDownload("Animation", "Assets/Animations/fire.png", "fire", "Assets/Animations/fire.json");
+assetMan.queueAssetForDownload("Animation", "Assets/Animations/ghost.png", "ghost", "Assets/Animations/ghost.json");
 assetMan.downloadAssets();
 
 Renderer.createWebGLProgram();

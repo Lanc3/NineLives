@@ -109,4 +109,7 @@
   <preference name="Fullscreen" value="True" />
   <plugin name="cordova-plugin-screen-orientation" spec="~3.0.2-dev" src="https://github.com/apache/cordova-plugin-screen-orientation.git" />
   <plugin name="es6-promise-plugin" spec="~4.2.2" />
+  <plugin name="org.dartlang.phonegap.gyroscope" spec="~0.0.2" src="C:\Users\Lanc3\Desktop\cordova-plugin-gyroscope-master" />
+  <plugin name="cordova-plugin-device-orientation" spec="~2.0.1" />
+  <plugin name="cordova-plugin-device-motion" spec="~2.0.1" />
 </widget>

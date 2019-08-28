@@ -127,7 +127,7 @@ class assetManager
     }
     createJsonAsset(path, name, type,json)
     {
-        this.jsonData = this.readJson(json);
+        
 
         var tex = this.gl.createTexture();
         this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
@@ -148,7 +148,7 @@ class assetManager
         img.onload = function () {
             textureInfo.width = img.width;
             textureInfo.height = img.height;
-
+            that.jsonData = that.readJson(json);
             that.gl.bindTexture(that.gl.TEXTURE_2D, textureInfo.texture);
             that.gl.texImage2D(that.gl.TEXTURE_2D, 0, that.gl.RGBA, that.gl.RGBA, that.gl.UNSIGNED_BYTE, img);
             that.assetCache[name] = new SpriteSheetData(type, path, name, textureInfo.texture, textureInfo.width, textureInfo.height, that.jsonData);

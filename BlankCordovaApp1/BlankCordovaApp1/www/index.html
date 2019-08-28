@@ -15,10 +15,27 @@
     <link rel="stylesheet" href="css/app.css" />
 </head>
 <body>
+    <div id="ui-container">
+        <div id="coins"></div>
+        <div id="time"></div>
+        <div id="score"></div>
+    </div>
+
+    <div id="button">Skip</div>
     <div id="myProgress">
+
         <div id="myBar"></div>
     </div>
+    <div id="ui-speachBubble" class="tutorialHelpLeft"></div>
+
+    <div class="loader">
+        <div class="inner one"></div>
+        <div class="inner two"></div>
+        <div class="inner three"></div>
+    </div>
+
     <div id="game-app"></div>
+    <div id="ui-continer"></div>
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="scripts/platformOverrides.js"></script>
     <script src="scripts/Renderer/WebGLHelper.js"></script>
@@ -37,12 +54,13 @@
     <script src="scripts/Managers/assetManager.js"></script>
     <script src="scripts/Managers/audioManager.js"></script>
     <script src="scripts/Managers/levelManager.js"></script>
+
     <script src="scripts/Managers/CollisionManager.js"></script>
     <script src="scripts/Renderer/renderer.js"></script>
     <script src="scripts/Managers/Animation.js"></script>
+    <script src="scripts/collisionObjectType.js"></script>
     <script src="scripts/rectangle.js"></script>
     <script src="scripts/Player.js"></script>
-
     <script src="scripts/platform.js"></script>
     <script src="scripts/cell.js"></script>
     <script src="scripts/scene.js"></script>
@@ -54,6 +72,9 @@
     <script src="scripts/Scenes/tutorialScene.js"></script>
     <script src="scripts/menuButton.js"></script>
     <script src="scripts/goal.js"></script>
+    <script src="scripts/coin.js"></script>
+    <script src="scripts/ghost.js"></script>
+    <script src="scripts/spike.js"></script>
     <script src="scripts/Renderer/vector.js"></script>
     <script src="scripts/line.js"></script>
     <script src="scripts/game.js"></script>

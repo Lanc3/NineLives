@@ -52,12 +52,18 @@ class InputManager extends Invoker
         */
         this.startTouchTime;
 
+        this.compass = navigator.compass;
+        this.options = { frequency: 50 };
+        this.Pitch;
+        this.Roll;
+        let that = this;
+        this.gyroWatchID = navigator.accelerometer.watchAcceleration(passRight(this.onSuccess, that), that.onError, that.options);
         this.swipeDirection;
         this.startX;
         this.startY;
         this.distX;
         this.distY;
-        this.threshold = 150; //required min distance traveled to be considered swipe
+        this.threshold = 10; //required min distance traveled to be considered swipe
         this.restraint = 100; // maximum distance allowed at the same time in perpendicular direction
         this.allowedTime = 300; // maximum time allowed to travel that distance
         this.elapsedTime;
@@ -87,6 +93,22 @@ class InputManager extends Invoker
     resetCanvas() {
         //todo reset logic if needed
     }
+    getGyroscopeData(speed)
+    {
+       
+    }
+    onSuccess(accel,self)
+    {
+        //self.speed = speed;
+        self.Roll = Math.atan2(accel.y, accel.z) * 180 / Math.PI;
+        self.Pitch = Math.atan2(-accel.x, Math.sqrt(accel.y * accel.y + accel.z * accel.z)) * 180 / Math.PI;
+        //document.getElementById("gyro").innerHTML = " Pitch: " + this.Pitch;
+    };
+
+    onError()
+    {
+        //document.getElementById("gyro").innerHTML = "error";
+    };
     /**
      * this is the ontouch start event. it is called when the touch start event fires, 
      * @param {event} e this is the event passed through
@@ -158,7 +180,7 @@ class InputManager extends Invoker
             return this.jumpCommand;
         }
         else {
-            this.moveCommand = new MoveCommand(CommandState.CREATED, this.movingTouch,dt);
+            this.moveCommand = new MoveCommand(CommandState.CREATED, this.speed,dt);
             return this.moveCommand;
         }
 
