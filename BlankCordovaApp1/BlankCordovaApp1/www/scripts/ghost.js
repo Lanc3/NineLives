@@ -8,7 +8,7 @@
         
         this.spriteSheet = new Animation("ghost", this.position, 10, width, height);
         this.spriteSheet.setCurrentAnimation("idle");
-        this.speed = 0.1;
+        this.speed = 0.2;
         this.distance;
         this.direction = new vector(0,0);
         this.timeToMove = 5000;
@@ -17,7 +17,7 @@
    
     setPosition(position) {
 
-        this.position.y += position.y
+        this.position.y = position.y + this.startPosition.y;
         super.setPosition(this.position);
     }
     update(dt) {
@@ -33,8 +33,18 @@
 
             this.direction = position.subtract(this.position);
             this.direction.normalize();
+            this.direction.y = 0;
             this.timer = 0;
         
+    }
+    hit()
+    {
+        this.isAlive = false;
+    }
+    reset()
+    {
+        this.isAlive = true;
+        //this.position = this.startPosition;
     }
     draw() {
         if (this.isAlive) {

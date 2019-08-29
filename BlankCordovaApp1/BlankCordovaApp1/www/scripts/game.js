@@ -18,14 +18,20 @@ class game
         this.PlayingScene = new playingScene("Playing Scene", this.inputManager);
         this.GameOverScene = new gameOverScene("Game Over Scene", this.inputManager);
         this.tutorialScene = new tutorialScene("Tutorial Scene", this.inputManager);
+        this.optionsScene = new optionsScene("Options Scene", this.inputManager);
+        this.dificultyScene = new dificultyScene("Difficulty Scene", this.inputManager);
+        this.multiplayerScene = new multiplayerScene("Multiplayer Scene", this.inputManager);
         this.SceneManager = new sceneManager();
         this.SceneManager.addScene(this.TitleScene);
         this.SceneManager.addScene(this.MenuScene);
         this.SceneManager.addScene(this.PlayingScene);
         this.SceneManager.addScene(this.GameOverScene);
         this.SceneManager.addScene(this.tutorialScene);
+        this.SceneManager.addScene(this.optionsScene);
+        this.SceneManager.addScene(this.dificultyScene);
+        this.SceneManager.addScene(this.multiplayerScene);
         this.SceneManager.goToScene("Menu Scene");
-        
+        this.audioManager = new audioManager();
        
        
         //document.addEventListener("click", passRight(this.clickHandler,this));
@@ -53,7 +59,8 @@ class game
         {
             if (this.SceneManager.currentScene.menuState.playing)
             {
-                this.SceneManager.goToScene("Playing Scene");
+                this.audioManager.playSound("buttonSound", false);
+                this.SceneManager.goToScene("Difficulty Scene");
             }
             else if (this.SceneManager.currentScene.menuState.tutorial)
             {
@@ -65,7 +72,7 @@ class game
             }
             else if (this.SceneManager.currentScene.menuState.options)
             {
-                this.SceneManager.goToScene("Game Over Scene");
+                this.SceneManager.goToScene("Options Scene");
             }
             else if (this.SceneManager.currentScene.menuState.quit)
             {
@@ -77,6 +84,28 @@ class game
             if (this.SceneManager.currentScene.isFinished)
             {
                 this.SceneManager.goToScene("Menu Scene");
+            }
+        }
+        if (this.SceneManager.currentScene.title === "Options Scene")
+        {
+            if (this.SceneManager.currentScene.menuState.back)
+            {
+                this.SceneManager.goToScene("Menu Scene");
+            }
+        }
+        if (this.SceneManager.currentScene.title === "Difficulty Scene")
+        {
+            if (this.SceneManager.currentScene.menuState.easy)
+            {
+                this.SceneManager.goToScene("Playing Scene");
+            }
+            else if (this.SceneManager.currentScene.menuState.medium)
+            {
+                this.SceneManager.goToScene("Playing Scene");
+            }
+            else if (this.SceneManager.currentScene.menuState.hard)
+            {
+                this.SceneManager.goToScene("Playing Scene");
             }
         }
         //loop

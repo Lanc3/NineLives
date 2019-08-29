@@ -11,7 +11,10 @@
     addPlatform(position, width, height,image)
     {
         this.listOfCollidableObjects.push(new platform(position, width, height, image));
-        this.listOfCollidableObjects.push(new coin(new vector(position.x + ((width - 20) / 2) , position.y - 25), 20, 20));
+        if (image === "platform") {
+            this.listOfCollidableObjects.push(new coin(new vector(position.x + ((width - 20) / 2), position.y - 25), 20, 20));
+        }
+       
     }
     addGhost(position,width,height)
     {
@@ -34,17 +37,14 @@
                 object.setPosition(that.position);
             }
             else if (object.type === collisionType.COIN) {
-                if (!object.isCollected) {
-                    object.setPosition(that.position)
-                }
-                else {
-                    object.update(dt);
-                }
+                    object.setPosition(that.position) 
             }
             else if (object.type === collisionType.GHOST) {
-                if (that.position.y >= 0) {
-                    object.setPosition(that.position);
+                object.setPosition(that.position);
+                if (that.position.y >= -200) {
+                    
                     object.moveTo(that.playerPosition);
+                    
                 }
                 object.update(dt);
             }
@@ -53,6 +53,17 @@
             }
         });
 
+    }
+    reset()
+    {
+        this.listOfCollidableObjects.forEach(function (object) {
+            if (object.type === collisionType.COIN) {
+                object.reset();
+            }
+            else if (object.type === collisionType.GHOST) {
+                object.reset();
+            }
+        });
     }
     draw() {
 

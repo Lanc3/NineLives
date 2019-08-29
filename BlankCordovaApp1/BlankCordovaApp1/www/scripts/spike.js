@@ -19,6 +19,13 @@
     update(dt) {
        
     }
+    hit() {
+        this.isAlive = false;
+    }
+    reset() {
+        this.isAlive = true;
+        this.position = this.startPosition;
+    }
     draw() {
         if (this.isAlive) {
             Renderer.drawImage(this.texture.texture, this.texture.width, this.texture.height, 0, 0,

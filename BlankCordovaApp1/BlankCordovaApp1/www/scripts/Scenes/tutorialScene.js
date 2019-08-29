@@ -22,7 +22,7 @@ class tutorialScene extends scene
     constructor(title, inputController)
     {
         super(title, inputController);
-        this.levelmanager = new levelManger();
+        this.levelmanager = new levelManger(LevelType.TUTORIAL);
         this.player = new Player(new vector(175, 100), 50, 50, 0.4, inputController, this.levelmanager);
         this.tutorialHelpText = document.getElementById("ui-speachBubble");
         this.inputController = inputController;
@@ -33,10 +33,9 @@ class tutorialScene extends scene
     }
 
     update(dt) {
-        this.levelmanager.setPlayerCurrentHeight(this.player.position);
+        
         this.levelmanager.setPlayerCurrentPosition(this.player.position);
         this.levelmanager.update(dt);
-        this.player.setCollisionObjects(this.levelmanager.arrayOfCells);
         this.player.update(dt);
         this.timer += dt;
         this.helperText();
@@ -145,7 +144,7 @@ class tutorialScene extends scene
     stop() {
         this.levelmanager.stop();
         this.tutorialHelpText.style.visibility = 'hidden';
-        this.levelmanager = new levelManger();
+        this.levelmanager = new levelManger(LevelType.TUTORIAL);
         this.player = new Player(new vector(175, 100), 50, 50, 0.4, this.inputController, this.levelmanager);
         this.timer = 0;
         this.currentTutorialState = TutorialState.START;

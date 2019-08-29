@@ -16,28 +16,30 @@
     }
    
     setPosition(position) {
-        if (!this.isCollected) {
+        
             this.position.y = position.y + this.startPosition.y;
             super.setPosition(this.position);
-        }
+        
    }
    update(dt)
    {
-       if (this.isCollected && this.isAlive)
-       {
-           this.position.add(this.direction.multiply(this.speed * dt));
-           this.distance = this.position.distance(new vector(10,10));
-           if (this.distance <= 0)
-           {
-               this.isAlive = false;
-           }
-       }
+       
     }
+   reset()
+   {
+       //this.position = this.startPosition;
+       this.isAlive = true;
+       this.isCollected = false;
+       this.speed = 1;
+       this.distance;
+       this.direction;
+   }
    
    collect()
    {
        this.isCollected = true;
-       this.moveTo(new vector(10, 10));
+       this.isAlive = false;
+       //this.moveTo(new vector(10, 10));
    }
    moveTo(position)
    {

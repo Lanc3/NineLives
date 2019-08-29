@@ -25,7 +25,7 @@ class menuScene extends scene
         this.quitButton = new menuButton("quit", Renderer.physicalScreenWidth / 2 - this.buttonWidth / 2, this.yPosition * 5, this.buttonWidth, this.height);
         //audio
         this.audioManager = new audioManager();
-        //this.audioManager.playSound("music", false);
+        //this.audioManager.playSound("buttonSound", false);
         this.background = assetMan.getAsset("menuBackground");
     } 
     /**
@@ -45,25 +45,46 @@ class menuScene extends scene
     }
     update(dt)
     {
+       
         if (this.playButton.contains(this.inputController.getIntupInfo().position))
         {
-            this.menuState = { playing: true, tutorial: false, multiplayer: false, options: false, quit: false };
+            if (!this.inputController.getIntupInfo().isTouching) {
+                this.audioManager.playSound("buttonSound", false);
+                this.menuState = { playing: true, tutorial: false, multiplayer: false, options: false, quit: false };
+            }
+            
         }
         else if (this.tutorialButton.contains(this.inputController.getIntupInfo().position))
         {
-            this.menuState = { playing: false, tutorial: true, multiplayer: false, options: false, quit: false };
+            if (!this.inputController.getIntupInfo().isTouching) {
+                this.audioManager.playSound("buttonSound", false);
+                this.menuState = { playing: false, tutorial: true, multiplayer: false, options: false, quit: false };
+            }
+            
         }
         else if (this.multiplayerButton.contains(this.inputController.getIntupInfo().position))
         {
-            this.menuState = { playing: false, tutorial: false, multiplayer: true, options: false, quit: false };
+            if (!this.inputController.getIntupInfo().isTouching) {
+                this.audioManager.playSound("buttonSound", false);
+                this.menuState = { playing: false, tutorial: false, multiplayer: true, options: false, quit: false };
+            }
+            
         }
         else if (this.optionsButton.contains(this.inputController.getIntupInfo().position))
         {
-            this.menuState = { playing: false, tutorial: false, multiplayer: false, options: true, quit: false };
+            if (!this.inputController.getIntupInfo().isTouching) {
+                this.audioManager.playSound("buttonSound", false);
+                this.menuState = { playing: false, tutorial: false, multiplayer: false, options: true, quit: false };
+            }
+            
         }
         else if (this.quitButton.contains(this.inputController.getIntupInfo().position))
         {
-            this.menuState = { playing: false, tutorial: false, multiplayer: false, options: false, quit: true };
+            if (!this.inputController.getIntupInfo().isTouching) {
+                this.audioManager.playSound("buttonSound", false);
+                this.menuState = { playing: false, tutorial: false, multiplayer: false, options: false, quit: true };
+            }
+            
         }
         
     }

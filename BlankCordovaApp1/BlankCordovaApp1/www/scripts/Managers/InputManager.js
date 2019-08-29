@@ -72,6 +72,7 @@ class InputManager extends Invoker
         this.moveCommand = new MoveCommand(CommandState.CREATED);
         this.moving;
         this.setupTouchDevice(this);
+        this.inputInfo = { position: new vector(-1, -1), isTouching: false, swipeDirection: new vector(0, 0), movingTouches: new vector(-1, -1) };
     }
 
     /**
@@ -127,6 +128,7 @@ class InputManager extends Invoker
         self.touchCanvasPosition = new vector(touches.pageX, touches.pageY);
         self.movingTouch = new vector(touches.pageX, touches.pageY);
         self.touching = true;
+        self.inputInfo = { position: self.touchCanvasPosition, isTouching: true, swipeDirection: self.swipeDirection, movingTouches: self.movingTouch };
     }
     /**
      * this is the on touch end function, it fires whent he touch end event is called
@@ -135,8 +137,9 @@ class InputManager extends Invoker
      */
     onTouchEnd(e, self) {
         e.preventDefault();
+        
         let touches = e.changedTouches[0];
-
+        
         self.distX = touches.pageX - self.startX // get horizontal dist traveled by finger while in contact with surface
         self.distY = touches.pageY - self.startY // get vertical dist traveled by finger while in contact with surface
         self.elapsedTime = new Date().getTime() - self.startTime // get time elapsed
@@ -148,9 +151,7 @@ class InputManager extends Invoker
                 self.swipeDirection = (self.distY < 0) ? SwipeDirection.UP : SwipeDirection.DOWN // if dist traveled is negative, it indicates up swipe
             }
         }
-        self.touchCanvasPosition = new vector(-1,-1);
-        self.movingTouch = new vector(-1, -1);
-        self.moving = false;
+        self.inputInfo = { position: self.touchCanvasPosition, isTouching: false, swipeDirection: self.swipeDirection, movingTouches: self.movingTouch };
     }
 
     /**
@@ -168,8 +169,7 @@ class InputManager extends Invoker
      * this returns the information for the touch events
      */
     getIntupInfo() {
-        this.inputInfo = {};
-        this.inputInfo = { position: this.touchCanvasPosition, isTouching: this.touching, swipeDirection: this.swipeDirection, movingTouches: this.movingTouch };
+
         return this.inputInfo;
     }
     handleInput(dt)

@@ -29,17 +29,17 @@ class Player extends rectangle
         this.spriteSheet.setCurrentAnimation("Idle");
         this.levelManager = levelManager;
         this.collisionManager = new CollisionManager();
-        this.collisionObjects = this.levelManager.arrayOfCells;
+        this.cells = this.levelManager.currentLevel.arrayOfCells;
         this.self = this;
         this.currentPlayerState = playerState.IDLE;
-        this.gravity = 0.5;
+        this.gravity = 0.25;
         this.standing = false;
         this.jumpHeight = 0;
         this.jumpSpeed = 1;
         this.audioManager = new audioManager();
         this.coinsCollectedAmount = 0;
         
-        this.coinAmount = 0;
+        this.coinAmount = 9;
         this.collisionType = Object.freeze({ "PLAYER": 1, "COIN": 2, "PLATFORM": 3, "SPIKE": 4, "GHOST": 5 });
     }
     /**
@@ -47,6 +47,8 @@ class Player extends rectangle
     */
     update(dt)
     {
+        super.setPosition(this.position);
+        this.calculateCollisions();
         this.handleInput(dt);
         this.feet = new vector(this.position.x + 25, this.position.y + 45);
 
@@ -55,15 +57,18 @@ class Player extends rectangle
         {
             this.jumpHeight = 0;
         }
+        
         this.position.y += (this.gravity - this.jumpHeight) * dt;
         
         
+        
+        
         this.spriteSheet.position = this.position;
-        super.setPosition(this.position)
+        
         this.wrapPlayerInScreen();
 
-        this.calculateCollisions();
-       
+        
+        
         //document.getElementById("gyro").innerHTML = " Y: " + this.inputControlller.speed.y;
         this.position.x += this.inputControlller.Pitch / 40 * dt;
         if (this.inputControlller.Pitch > 20)
@@ -88,7 +93,7 @@ class Player extends rectangle
         
         if (this.standing) {
             this.standing = false;
-            this.jumpHeight = 2.5;
+            this.jumpHeight = 2;
             if (this.spriteSheet.currentAnimationName !== "Jump") {
                 //this.spriteSheet.setCurrentAnimation("Jump");
                 //this.spriteSheet.setAnimationSpeed(5);
@@ -104,34 +109,32 @@ class Player extends rectangle
     {
         let that = this;
         
-        if (this.collisionObjects !== 'undefined' || this.collisionObjects !== null) {
+        if (this.cells !== 'undefined' || this.cells !== null) {
            
 
-            this.collisionObjects.forEach(function (element) {
+            this.cells.forEach(function (element) {
                 let listOfCollidableObjects = element.listOfCollidableObjects;
-                
                 listOfCollidableObjects.forEach(function (object) {
                     if (object.type === collisionType.PLATFORM) {
                         
                         if (that.intersects(object)) {
-
+                            that.standing = true;
                             var offsetX = that.collisionManager.getHorizontalIntersectionDepth(that, object);
                             var offsetY = that.collisionManager.getVirticalIntersectionDepth(that, object);
 
                             if (Math.abs(offsetX) > Math.abs(offsetY)) {
+                                
                                 that.position.y += offsetY;
-                                that.standing = true;
+                                
 
                             }
                             else {
                                 that.position.x += offsetX;
                             }
                         }
-                        else {
-                            that.standing = false;
-                        }
+                        
                     }
-                    else if (object.type === collisionType.COIN)
+                    if (object.type === collisionType.COIN)
                     {
                         if (that.inbetween(object)) {
                             if (!object.isCollected) {
@@ -142,6 +145,25 @@ class Player extends rectangle
                             }
                         }
                     }
+                     if (object.type === collisionType.SPIKE) {
+                        if (that.inbetween(object) && object.isAlive === true)
+                        {
+                            that.coinAmount = that.coinAmount - 2;
+                            that.levelManager.setPlayerCoinAmount(that.coinAmount);
+                            that.audioManager.playSound("hit2", false);
+                            object.hit();
+                        }
+                        
+                    }
+                    if (object.type === collisionType.GHOST) {
+                        if (that.inbetween(object) && object.isAlive === true) {
+                            that.coinAmount = that.coinAmount - 2;
+                            that.levelManager.setPlayerCoinAmount(that.coinAmount);
+                            that.audioManager.playSound("hit", false);
+                            object.hit();
+                        }
+                    }
+                    
 
                 });
             });
@@ -154,13 +176,13 @@ class Player extends rectangle
     }
     wrapPlayerInScreen()
     {
-        if (this.position.x >= Renderer.physicalScreenWidth)
+        if (this.position.x >= Renderer.physicalScreenWidth-50)
         {
-            this.position.x = 5;
+            this.position.x = Renderer.physicalScreenWidth-50;
         }
         else if (this.position.x <= -this.width)
         {
-            this.position.x = Renderer.physicalScreenWidth;
+            this.position.x = 0;
         }
 
         if (this.position.y >= Renderer.physicalScreenHeight)
@@ -178,20 +200,21 @@ class Player extends rectangle
         let command = this.inputControlller.handleInput(dt);
         if (command)
         {
-            command.execute(this);
+            if (this.standing) {
+                command.execute(this);
+            }
+           
         }
        
     }
-    setCollisionObjects(objectList)
-    {
-       // this.collisionObjects = objectList;
-    }
-    
     intersects(object)
     {
         return super.intersects(object);
     }
-
+    setCollisionObjects(cells)
+    {
+        this.cells = cells;
+    }
     /**
     * Function that sets a new position for the player
     * @param {vector} newPosition new position for the player
