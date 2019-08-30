@@ -16,6 +16,7 @@ assetMan.queueAssetForDownload("Shader", "Assets/Shaders/vertex.shader", "vert",
 
 assetMan.queueAssetForDownload("Texture2D", "Assets/Images/bg_jungle.png", "jungleBackground", null);
 assetMan.queueAssetForDownload("Texture2D", "Assets/Images/platform.png", "platform", null);
+assetMan.queueAssetForDownload("Texture2D", "Assets/Images/jungle_pack_34.png", "deadWall", null);
 assetMan.queueAssetForDownload("Texture2D", "Assets/Images/sky.jpg", "skyBackground", null);
 assetMan.queueAssetForDownload("Texture2D", "Assets/Images/loadscreen.png", "loadingBackground", null);
 assetMan.queueAssetForDownload("Texture2D", "Assets/Images/multiplayerButton.png", "multiplayerButton", null);

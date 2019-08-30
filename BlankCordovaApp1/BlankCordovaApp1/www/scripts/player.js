@@ -38,7 +38,7 @@ class Player extends rectangle
         this.jumpSpeed = 1;
         this.audioManager = new audioManager();
         this.coinsCollectedAmount = 0;
-        
+        this.isGameOver = false;
         this.coinAmount = 9;
         this.collisionType = Object.freeze({ "PLAYER": 1, "COIN": 2, "PLATFORM": 3, "SPIKE": 4, "GHOST": 5 });
     }
@@ -47,6 +47,10 @@ class Player extends rectangle
     */
     update(dt)
     {
+        if (this.coinAmount < 0)
+        {
+            this.isGameOver = true;
+        }
         super.setPosition(this.position);
         this.calculateCollisions();
         this.handleInput(dt);

@@ -21,6 +21,7 @@ class game
         this.optionsScene = new optionsScene("Options Scene", this.inputManager);
         this.dificultyScene = new dificultyScene("Difficulty Scene", this.inputManager);
         this.multiplayerScene = new multiplayerScene("Multiplayer Scene", this.inputManager);
+        this.endScene = new endScene("End Scene", this.inputManager);
         this.SceneManager = new sceneManager();
         this.SceneManager.addScene(this.TitleScene);
         this.SceneManager.addScene(this.MenuScene);
@@ -30,9 +31,10 @@ class game
         this.SceneManager.addScene(this.optionsScene);
         this.SceneManager.addScene(this.dificultyScene);
         this.SceneManager.addScene(this.multiplayerScene);
+        this.SceneManager.addScene(this.endScene);
         this.SceneManager.goToScene("Menu Scene");
         this.audioManager = new audioManager();
-       
+        this.score = 0;
        
         //document.addEventListener("click", passRight(this.clickHandler,this));
         this.lastUpdate = Date.now();
@@ -106,6 +108,27 @@ class game
             else if (this.SceneManager.currentScene.menuState.hard)
             {
                 this.SceneManager.goToScene("Playing Scene");
+            }
+        }
+        if (this.SceneManager.currentScene.title === "Playing Scene")
+        {
+            if (this.SceneManager.currentScene.isGameOver)
+            {
+                this.score = this.SceneManager.currentScene.totalScore;
+                this.scoreText = document.getElementById("endScore");
+                console.log(this.score)
+                this.scoreText.innerText = "Score : " +this.score;
+                this.SceneManager.goToScene("End Scene");
+                
+            }
+        }
+        if (this.SceneManager.currentScene.title === "End Scene")
+        {
+            
+            this.SceneManager.currentScene.setScore(this.score);
+            if (this.SceneManager.currentScene.menuState.back)
+            {
+                this.SceneManager.goToScene("Menu Scene")
             }
         }
         //loop

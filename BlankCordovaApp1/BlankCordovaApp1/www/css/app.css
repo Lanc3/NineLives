@@ -24,6 +24,25 @@ canvas {
     position: absolute;
     z-index: 1;
 }
+#endScore {
+    color: orange;
+    text-align: center;
+    font-size: 26px;
+    position: absolute;
+    top: 360px;
+    left: 160px;
+    z-index: 1;
+    width: fit-content;
+    height: fit-content;
+    padding: 2px;
+    background: #FEFFFF;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    border: #FFA500 solid 6px;
+    visibility: hidden;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
 .tutorialHelpLeft {
     color: orange;
     opacity: 0.75;

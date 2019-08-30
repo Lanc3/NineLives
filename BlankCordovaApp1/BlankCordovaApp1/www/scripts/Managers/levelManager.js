@@ -14,7 +14,7 @@ class levelManger
         {
             this.currentLevel = this.playing;
         }
-        
+        this.totalScore = 0;
     }
     
     
@@ -31,6 +31,7 @@ class levelManger
     {
 
         this.currentLevel.update(dt);
+        this.totalScore = this.currentLevel.totalScore;
     }
     draw()
     {
@@ -42,6 +43,7 @@ class levelManger
     }
     stop()
     {
+        this.totalScore = 0;
         this.currentLevel.stop();
     }
 }
